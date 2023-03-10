@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DE_Test_Export</fullName>
+    <description>Used for dependency checking to export DE_Test to the outside world.</description>
+    <types>
+        <members>PDETimeSheetCtrl</members>
+        <members>lookupFieldController</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>DE_Test</members>
+        <members>Timesheet</members>
+        <members>TimesheetRefreshEvent</members>
+        <members>TimesheetSaveThenRefreshEvent</members>
+        <members>lookupField</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
+    <types>
+        <members>Case.Client__c</members>
+        <members>Case.Statute__c</members>
+        <members>Statute__c.Default_Client_for_Statute__c</members>
+        <members>Time_Allocation__c.Client__c</members>
+        <members>Time_Allocation__c.Contact__c</members>
+        <members>Time_Allocation__c.Date__c</members>
+        <members>Time_Allocation__c.Is_a_working_day__c</members>
+        <members>Time_Allocation__c.Matter__c</members>
+        <members>Time_Allocation__c.Project__c</members>
+        <members>Time_Allocation__c.Quantity__c</members>
+        <members>Time_Allocation__c.Statute__c</members>
+        <members>Time_Allocation__c.Tasks__c</members>
+        <members>Timesheet_project__c.Type__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Statute__c</members>
+        <members>Time_Allocation__c</members>
+        <members>Timesheet_project__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Client</members>
+        <name>GlobalValueSet</name>
+    </types>
+    <types>
+        <members>Statute__c-Statute Layout</members>
+        <members>Time_Allocation__c-Time Allocation Layout</members>
+        <members>Timesheet_project__c-Timesheet project Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>Statute__c.All</members>
+        <members>Time_Allocation__c.All</members>
+        <members>Timesheet_project__c.All</members>
+        <name>ListView</name>
+    </types>
+    <version>45.0</version>
+</Package>

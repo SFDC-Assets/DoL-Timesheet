@@ -1,0 +1,287 @@
+<!--
+//  Copyright (c) 2023, salesforce.com, inc.
+//  All rights reserved.
+//  SPDX-License-Identifier: BSD-3-Clause
+//  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+-->
+<aura:component controller="PDETimeSheetCtrl" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global">
+
+    <!-- public attributes -->
+    <aura:attribute name="startDate" type="Date" default="2019-07-01T00:00:00.000Z" description="start date of the timesheet"/>
+    <aura:attribute name="endDate" type="Date" default="2019-07-25T00:00:00.000Z" description="(optional) endDate of the timesheet. only useful if timePeriod is set to custom"/>
+    <aura:attribute name="contactId" type="String" default="" description="ID of the timesheet contact"/>
+    <aura:attribute name="maxNumberOfHoursADay" type="String" default="9" description="Max number of hours for a given project on a given day"/>
+    <aura:attribute name="readOnly" type="Boolean" default="false" description="when true, timesheet is not editable"/>
+    <aura:attribute name="timePeriod" type="String" default="week" description="can be week, month or custom"/>
+    <aura:attribute name="parentGID" type="String" description="This is used to store the ID of the master component that created the timesheet"/>
+    <aura:attribute name="disableeverything" type="Boolean" default="false" />
+    <!-- internal attributes -->
+    <aura:attribute name="dataModel" type="Map" description="all the data of the timesheet currently loaded is stored in this object"/>
+    <aura:attribute name="projectId" type="String" default=""/>
+    <aura:attribute name="matterId" type="String" default=""/>
+    <aura:attribute name="statuteId" type="String" default=""/>
+    <aura:attribute name="mattertobeadded" type="Case" default=""/>
+    <aura:attribute name="statutetobeadded" type="Statute__c" default=""/>
+    <aura:attribute name="projectToBeAdded" type="Map" default="{isValid:false}"/>
+    <aura:attribute name="selectedClientValue" type="String" default=""/>
+    <aura:attribute name="classSizeCell" type="String" default="autoCell"/>
+	<aura:attribute name="clientoptions" type="List"/>
+    <!-- Events registration-->
+
+    <aura:registerEvent name="refreshEvent" type="c:TimesheetRefreshEvent"/>
+
+    <!-- handlers -->
+    <aura:handler name="init" value="{!this}" action="{!c.initAction}"/>
+    <aura:handler event="c:TimesheetSaveThenRefreshEvent" action="{!c.saveAction}"/>
+    <aura:handler name="refreshEvent" event="c:TimesheetRefreshEvent" action="{!c.initAction}"/>
+    <aura:handler name="change" value="{!v.projectId}" action="{!c.chooseProjectAction}"/>
+    <aura:handler name="change" value="{!v.matterId}" action="{!c.chooseCaseAction}"/>
+	<aura:handler name="change" value="{!v.statuteId}" action="{!c.chooseStatuteAction}"/>
+    
+    <!-- component code -->
+
+    <div class="slds">
+
+        <div class="hide-on-desktop slds-grid slds-m-bottom--medium">
+            <div class="slds-col slds-p-bottom--medium slds-text-align--center">
+                <lightning:button variant="neutral" label="Refresh" iconName="utility:refresh" iconPosition="left" onclick="{!c.initAction}"/>
+
+            </div>
+            <div class="{!(v.readOnly?'slds-hide':'')+' slds-col slds-p-bottom--medium slds-text-align--center'}">
+                <lightning:button variant="brand" label="Save" iconName="utility:upload" iconPosition="left" onclick="{!c.saveAction}"/>
+            </div>
+        </div>
+
+        <div class="slds-card">
+            <div class="slds-card__header slds-grid">
+                <div class="slds-media__body">
+                    
+                    <h3>From
+                        <ui:outputDate value="{!v.dataModel.startDate}"/>
+                        to
+                        <ui:outputDate value="{!v.dataModel.endDate}"/></h3>
+                </div>
+
+                <div class="slds-no-flex">
+                    <lightning:button variant="neutral" label="Refresh" iconName="utility:refresh" iconPosition="left" class="hide-on-mobile-device" onclick="{!c.initAction}"/>
+                    <aura:if isTrue="{!!v.disableeverything}">
+                        <lightning:button variant="neutral" label="Save" iconName="utility:upload" iconPosition="left" class="{!(v.readOnly?'slds-hide':'')+' hide-on-mobile-device'}" onclick="{!c.saveAction}"/>
+                    </aura:if>
+                    <button class="slds-button slds-button--neutral slds-button--small slds-hide" onclick="{!c.testTimePeriod}">&nbsp;DEBUG&nbsp;</button>
+                </div>
+            </div>
+            <div class="slds-card__body slds-scrollable--x" style="overflow-y:visible;background-color:white">
+                <table class="slds-table slds-table--bordered slds-no-row-hover slds-max-medium-table--stacked-horizontal slds-table--fixed-layout">
+                    <thead>
+                        <tr>
+                            <th class="slds-text-heading--label " style="width: 350px;">
+                                <div style="width:350px;">Category</div>
+                            </th>    
+                            
+                            <th style="width: 200px;">
+                                <div style="width:100px;">Task</div>
+                            </th>
+
+                            <aura:iteration items="{!v.dataModel.dates}" var="date">
+                                <th class="{!'slds-text-heading--label '+v.classSizeCell+' '+(date.isWorkingDay == false ? 'cellNotWorkingDay' : '')}">
+                                    <p>{!date.dayName3Letters}</p>
+                                    <p>{!date.displaydate}</p>
+                                </th>
+                            </aura:iteration>
+                            
+                            <th class="{!v.classSizeCell+' slds-text-heading--label cellTotal'}">TOTAL</th>
+                        	
+                            <aura:if isTrue="{!!v.disableeverything}">
+                                <th style="width: 35px;">
+                                    
+                                </th>
+                            </aura:if>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTable">
+                        <aura:iteration items="{!v.dataModel.lines}" var="line" indexVar="index">
+                            <tr class="slds-hint-parent">
+                                <td data-label="Project Name" style="white-space:normal;">
+                                    <aura:if isTrue="{!line.projectId == null}">
+                                      <!-- not used anymore -->
+                                        <aura:set attribute="else">
+                                            {!line.projectName}
+                                        </aura:set>
+                                    </aura:if>
+                                    <br/>
+                                    <aura:if isTrue="{!line.matter == undefined || line.matter == ''}">
+                                      <!-- not used anymore -->
+                                        <aura:set attribute="else">
+                                            <br/>
+                                            Matter id : {!line.matter.CaseNumber}
+                                            <br/>
+                                            Title : {!line.matter.Subject}
+                                            <br/>
+											Client : {!line.matter.Client__c}
+                                            <br/>
+                                            Statute : {!line.matter.Statute__r.Name}
+                                            
+                                        </aura:set>
+                                    </aura:if>
+                                    
+                                    <aura:if isTrue="{!line.statute == undefined || line.statute == ''}">
+                                      <!-- not used anymore -->
+                                        <aura:set attribute="else">
+                                            <br/>
+                                            Statute : {!line.statute.Name}
+                                            <br/> 
+											Client :  {!line.selectedClientValue}
+                                        </aura:set>
+                                    </aura:if>
+                                    
+                                </td>
+                                
+                                <td>
+                                    <lightning:select disabled = "{!v.disableeverything}" value="{!line.selectedValue}">
+                                        <aura:iteration items="{!line.taskoptions}" var="option" >
+                                            <option text="{!option.label}" value="{!option.value}"/>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </td>
+
+                                <aura:iteration items="{!line.cells}" var="cell">
+                                    <td data-label="{!cell.cellLabel}" class="{!cell.isWorkingDay == false ? 'cellNotWorkingDay' : ''}">
+                                        <aura:if isTrue="{!v.readOnly}">
+                                            &nbsp;{!cell.qty}
+
+                                            <aura:set attribute="else">
+                                                <div class="">
+                                                    <button class="slds-button slds-button--icon-bare hide-on-desktop" data-actiontype="remove1" data-lineindex="{!cell.lineIndex}" data-colindex="{!cell.colIndex}" onclick="{!c.onCellChange}">
+                                                        <lightning:icon iconName="utility:down" size="medium" alternativeText="less"/>
+                                                    </button>
+                                                    <input
+                                                        disabled = "{!v.disableeverything}"
+                                                        type="number"
+                                                        pattern="\d*"
+                                                        name="qty"
+                                                        min="0"
+                                                        max="{!v.maxNumberOfHoursADay}"
+                                                        value="{!cell.qty}"
+                                                        data-actiontype="change"
+                                                        data-lineindex="{!cell.lineIndex}"
+                                                        data-colindex="{!cell.colIndex}"
+                                                        onchange="{!c.onCellChange}"
+                                                        class="mobile-only-small-horizontal-margin"/>
+                                                    <button disabled = "{!v.disableeverything}" class="slds-button slds-button--icon-bare hide-on-desktop" data-actiontype="add1" data-lineindex="{!cell.lineIndex}" data-colindex="{!cell.colIndex}" onclick="{!c.onCellChange}">
+                                                        <lightning:icon iconName="utility:up" size="medium" alternativeText="more"/>
+                                                    </button>
+                                                </div>
+                                            </aura:set>
+                                        </aura:if>
+
+                                    </td>
+                                </aura:iteration>
+                                
+                                <td data-label="{!'Total for '+line.projectName}" class="mobile-only-margin-bottom cellTotal">{!line.lineTotal}</td>
+                                <aura:if isTrue="{!!v.disableeverything}">
+                                    <td>
+                                        <lightning:icon iconName="utility:close" size="x-small" />
+                                    </td>
+                                </aura:if>
+                            </tr>
+                        </aura:iteration>
+
+                        <tr class="slds-hint-parent add-on" disabled="{!v.disableeverything}">
+                            <td data-label="Add a new project" style="padding:0px;" class="hide-on-mobile-device cellTotal">
+                                <div style="overflow:visible;">
+                                    <table style="table-layout:fixed;">
+                                        <tr>
+                                            <td style="width:70%">
+												<aura:if isTrue="{!!v.disableeverything}">
+                                                    <c:lookupField label="Category" pluralLabel="Categories" sObjectAPIName="Timesheet_project__c" selectedItemId="{!v.projectId}"/>
+                                                    <br/>
+                                                    <div aura:id="matterlookupField" class="slds-hide">
+                                                        <p>Matter : </p><c:lookupField  pluralLabel="Matters" label="Matter" sObjectAPIName="Case" selectedItemId="{!v.matterId}"/>
+                                                    </div>
+                                                    <div aura:id="statutelookupField" class="slds-hide">
+                                                        <p>Statute : </p><c:lookupField  pluralLabel="Statutes" label="Statute" sObjectAPIName="statute__c" selectedItemId="{!v.statuteId}"/>
+                                                        <p>Client : </p>
+                                                        <lightning:select value="{!v.selectedClientValue}">
+                                                            <aura:iteration items="{!v.clientoptions}" var="option" >
+                                                                <option text="{!option.label}" value="{!option.value}"/>
+                                                            </aura:iteration>
+                                                        </lightning:select>
+                                                    </div>
+                                                </aura:if>
+                                                
+                                            </td>
+                                            <td>
+                                                <aura:if isTrue="{!!v.disableeverything}">
+                                                    <lightning:button variant="neutral" label="Add" iconName="utility:add" iconPosition="left" onclick="{!c.addLine}" />
+                                                </aura:if> 
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                            <td style="width: 100px;" class="cellTotal">
+                            </td>
+                            <!-- The following table inside a "cell with colspan" is a ugly workaround to prevent trigerring
+                        a bug in lightning framework. Without the workaround, grand total and coltotals get inversed
+                        in the rendering with no apparent reason. Suggested workaround is to embed code in a <span> or <div> which is not possible
+                        in the middle of table, hence a subtable
+                         -->
+                            <td colspan="{!v.dataModel.datesLength}" style="padding:0px" class="mobile-only-padding-12 cellTotal" data-label="Totals grouped by day">
+                                <table>
+                                    <tr>
+                                        <aura:iteration items="{!v.dataModel.colsTotals}" var="colTotal">
+                                            <td data-label="{!colTotal.cellLabel}" class="{!v.classSizeCell+' cellTotal'}" style="padding:11px;border:0px">{!colTotal.qty}</td>
+                                        </aura:iteration>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td data-label="GRAND TOTAL" class="cellTotal">
+                                <b>{!v.dataModel.grandTotal}</b>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <!-- THE FOLLOING DIV IS TO FORCE SOME SPACE FOR LOOKUP MENU WHEN ADDING A PROJECT
+                   THE PROJECT LOOKUP MENU IS BEHAVING STRANGELY BECAUSE IT IS INCLUDED IN A SCROLLABLE DIV.
+                 -->
+                <div style="height:97px;background-color: #FFFFFF;border-color: #FFFFFF;" class="hide-on-mobile-device"></div>
+
+            </div>
+
+        </div>
+
+        <div class="hide-on-desktop" style="margin-top:17px">
+            <div class="slds-card">
+                <div class="slds-card__header slds-grid">
+                    <div class="slds-media__body">
+                        <h2 class="slds-text-heading--small slds-truncate">Add a entry
+                        </h2>
+                    </div>
+                </div>
+                <div class="slds-grid ">
+                    <div class="slds-col slds-m-left--small slds-m-vertical--x-small" style="width:70%">
+                        <c:lookupField aura:id="lookupField" pluralLabel="Projects" label="Project" sObjectAPIName="Timesheet_project__c" selectedItemId="{!v.projectId}"/>                                               
+                    </div>
+                    <div class="slds-col slds-text-align--center slds-m-vertical--x-small">
+                        <lightning:button variant="neutral" label="Add" iconName="utility:add" iconPosition="left" onclick="{!c.addLine}" disabled="{!!v.projectToBeAdded.isValid}"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-m-top--medium">
+                <div class="slds-col slds-p-vertical--medium slds-text-align--center">
+                    <lightning:button variant="neutral" label="Refresh" iconName="utility:refresh" iconPosition="left" onclick="{!c.initAction}"/>
+
+                </div>
+                <div class="{!(v.readOnly?'slds-hide':'')+ ' slds-col slds-p-vertical--medium slds-text-align--center'}">
+                    <lightning:button variant="brand" label="Save" iconName="utility:upload" iconPosition="left" onclick="{!c.saveAction}"/>
+                </div>
+            </div>
+
+        </div>
+
+        <lightning:spinner aura:id="mySpinner" size="medium" class="slds-hide positionFixed"/>
+    </div>
+</aura:component>

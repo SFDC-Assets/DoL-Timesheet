@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Bureau of Labor Statistics</fullName>
+        <default>false</default>
+        <label>Bureau of Labor Statistics</label>
+    </customValue>
+    <customValue>
+        <fullName>Employment &amp; Training Administration</fullName>
+        <default>false</default>
+        <label>Employment &amp; Training Administration</label>
+    </customValue>
+    <customValue>
+        <fullName>Mine Safety and Health Administration</fullName>
+        <default>false</default>
+        <label>Mine Safety and Health Administration</label>
+    </customValue>
+    <customValue>
+        <fullName>Occupational Safety &amp; Health Admin.</fullName>
+        <default>false</default>
+        <label>Occupational Safety &amp; Health Admin.</label>
+    </customValue>
+    <customValue>
+        <fullName>Office of Asst. Secy. for Admin. &amp; Mgt.</fullName>
+        <default>false</default>
+        <label>Office of Asst. Secy. for Admin. &amp; Mgt.</label>
+    </customValue>
+    <customValue>
+        <fullName>Office of the Deputy Secretary</fullName>
+        <default>false</default>
+        <label>Office of the Deputy Secretary</label>
+    </customValue>
+    <customValue>
+        <fullName>Office of the Inspector General</fullName>
+        <default>false</default>
+        <label>Office of the Inspector General</label>
+    </customValue>
+    <customValue>
+        <fullName>Solicitor of Labor</fullName>
+        <default>false</default>
+        <label>Solicitor of Labor</label>
+    </customValue>
+    <customValue>
+        <fullName>Wage and Hour Division</fullName>
+        <default>false</default>
+        <label>Wage and Hour Division</label>
+    </customValue>
+    <masterLabel>Client</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

@@ -1,0 +1,138 @@
+<!--
+//  Copyright (c) 2023, salesforce.com, inc.
+//  All rights reserved.
+//  SPDX-License-Identifier: BSD-3-Clause
+//  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+-->
+<aura:component implements="force:appHostable" controller="PDETimeSheetCtrl">
+    <aura:attribute name="isDVisible" type="Boolean" default="false" />
+    <aura:attribute name="months" type="String[]"
+                    default="[{label:'Please select',value:'nothing'},
+                             { value: '0', label: 'January'},
+                             { value: '1', label: 'February'},
+                             { value: '2', label: 'March'},
+                             { value: '3', label: 'April'},
+                             { value: '4', label: 'May'},
+                             { value: '5', label: 'June'},
+                             { value: '6', label: 'July'},
+                             { value: '7', label: 'August'},
+                             { value: '8', label: 'September'},
+                             { value: '9', label: 'October'},
+                             { value: '10', label: 'November'},
+                             { value: '11', label: 'December'},
+                             ]"/>
+    
+    <aura:attribute name="week1" type="Date" default="2019-08-01T00:00:00.000Z"/>
+    <aura:attribute name="week2" type="Date" default="2019-08-08T00:00:00.000Z"/>
+    <aura:attribute name="week3" type="Date" default="2019-08-16T00:00:00.000Z"/>
+    <aura:attribute name="week4" type="Date" default="2019-08-22T00:00:00.000Z"/>
+    <aura:attribute name="week5" type="Date" default="2019-08-29T00:00:00.000Z"/>
+    <aura:attribute name="disableeverything" type="Boolean" default="false" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doinit}"/>
+    <aura:handler name="change" value="{!v.disableeverything}" action="{!c.setweeks}"/>
+    
+    <!--<lightning:button onclick="{! c.handleShowActiveSectionName }" label="Show Active Section Name"/>
+    <lightning:button onclick="{! c.handleToggleSectionD }" label="Toggle Section D"/>-->
+    
+    <lightning:card variant="Narrow" title="Track your time" iconName="standard:account">
+        <aura:set attribute="actions"> 
+            <lightning:button variant="neutral" label="Export CSV" iconName="utility:download" title="Export CSV"  />
+			
+            <aura:if isTrue="{!!v.disableeverything}">
+            	<lightning:button variant="neutral" label="Certify Time" title="Export CSV"  onclick="{!c.disable}"/>
+            </aura:if>
+            
+            <lightning:buttonIcon iconName="utility:down" variant="border-filled" alternativeText="Show More"/>
+        </aura:set>
+        <div class="slds-box">
+            
+            <div >
+                
+                <aura:if isTrue="{!!v.disableeverything}">
+                    <span class="slds-float_right" style="cursor:pointer;">
+                        <lightning:button  variant="neutral" label="Retrieve last month" onclick="{!c.retrievelastmonth}" />
+                    </span>
+                </aura:if>
+                <span>
+                    <lightning:select class="halfwidth" aura:id="selectmonth" label="Select Month" onchange="{!c.setweeks}">
+                        <aura:iteration items="{!v.months}" var="m">
+                            <option text="{!m.label}" value="{!m.value}" />
+                        </aura:iteration>
+                        
+                    </lightning:select>
+                </span>
+                
+                
+            </div>
+            
+            
+            <br/>
+            
+            <lightning:accordion aura:id="accordion" activeSectionName="B">
+                <lightning:accordionSection name="A" label="Week1">
+                    
+                    <div aura:id="week1TimesheetHere"></div>
+                    
+                    <!--<c:Timesheet contactId="0035800001OFLbZAAX"
+                         startDate="{!v.week1}"
+                         timePeriod="week"/>-->
+                    
+                </lightning:accordionSection>
+                <lightning:accordionSection name="B" label="Week2">
+                    <div aura:id="week2TimesheetHere"></div>
+                    
+                    <!--<c:Timesheet contactId="0035800001OFLbZAAX"
+                         startDate="{!v.week2}"
+                         timePeriod="week"/>-->
+                    
+                </lightning:accordionSection>
+                <lightning:accordionSection name="C" label="Week3">
+                    <div aura:id="week3TimesheetHere"></div>
+                    
+                    <!--<c:Timesheet contactId="0035800001OFLbZAAX"
+                         startDate="{!v.week3}"
+                         timePeriod="week"/>-->
+                    
+                </lightning:accordionSection>
+                
+                <lightning:accordionSection name="D" label="Week4">
+                    
+                    <div aura:id="week4TimesheetHere"></div>
+                    <!--<c:Timesheet contactId="0035800001OFLbZAAX"
+                         startDate="{!v.week4}"
+                         timePeriod="week"/> -->
+                    
+                </lightning:accordionSection>
+                
+                <lightning:accordionSection name="E" label="Week5">
+                    <div aura:id="week5TimesheetHere"></div>
+                    <!--<c:Timesheet contactId="0035800001OFLbZAAX"
+                         startDate="{!v.week5}"
+                         timePeriod="week"/> -->
+                    
+                </lightning:accordionSection>
+                
+                
+                <!--<aura:if isTrue="{! v.isDVisible }">
+            <lightning:accordionSection name="D" label="Week4">
+                
+                <c:Timesheet contactId="0035800001OFLbZAAX"
+                             startDate="2019-07-24T00:00:00.000Z"
+                             timePeriod="week"/>
+            </lightning:accordionSection>
+        </aura:if>-->
+            </lightning:accordion>
+        </div>
+        
+        <br/>
+        <div class="slds-align_absolute-center">
+            <lightning:button variant="brand" label="Export CSV" iconName="utility:download" title="Export CSV"  />
+        </div>
+        
+        
+        
+    </lightning:card> 
+    
+    <lightning:spinner aura:id="mySpinner" size="medium" class="slds-hide positionFixed"/>
+</aura:component>

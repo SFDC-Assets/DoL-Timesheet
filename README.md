@@ -1,0 +1,1 @@
+Get the required lookup field component at https://github.com/tscottdev/Lightning-Lookup

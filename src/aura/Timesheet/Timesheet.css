@@ -1,0 +1,54 @@
+/*
+//  Copyright (c) 2023, salesforce.com, inc.
+//  All rights reserved.
+//  SPDX-License-Identifier: BSD-3-Clause
+//  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+*/
+
+.THIS {
+}
+
+
+@media (min-width: 10em) and (max-width:48em){
+.THIS .hide-on-mobile-device {
+    display: none !important;
+    visibility: hidden !important;
+}
+.THIS .mobile-only-margin-bottom {
+    margin-bottom: 20px;
+}
+.THIS .mobile-only-padding-12 {
+    padding: 12px !important;
+}
+.THIS .mobile-only-small-horizontal-margin {
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+}
+}
+
+@media (min-width: 49em) {
+.THIS .hide-on-desktop {
+    display: none !important;
+    visibility: hidden !important;
+}
+.THIS .autoCell {
+    width: 12.5%;
+}
+
+.THIS .fixedCell {
+    width: 50px;
+}
+}
+
+.THIS .cellTotal {
+    background-color: #c0dfd9;
+    color: #16325c;
+}
+
+.THIS .cellNotWorkingDay {
+    background-color: #e9ebeb;
+}
+
+.THIS .positionFixed{
+  position:fixed;
+}

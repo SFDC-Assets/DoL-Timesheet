@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableLicensing>false</enableLicensing>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>Private</externalSharingModel>
+    <fields>
+        <fullName>Client__c</fullName>
+        <externalId>false</externalId>
+        <label>Client</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Bureau of Labor Statistics</fullName>
+                    <default>false</default>
+                    <label>Bureau of Labor Statistics</label>
+                </value>
+                <value>
+                    <fullName>Employment &amp; Training Administration</fullName>
+                    <default>false</default>
+                    <label>Employment &amp; Training Administration</label>
+                </value>
+                <value>
+                    <fullName>Mine Safety and Health Administration</fullName>
+                    <default>false</default>
+                    <label>Mine Safety and Health Administration</label>
+                </value>
+                <value>
+                    <fullName>Occupational Safety &amp; Health Admin.</fullName>
+                    <default>false</default>
+                    <label>Occupational Safety &amp; Health Admin.</label>
+                </value>
+                <value>
+                    <fullName>Office of Asst. Secy. for Admin. &amp; Mgt.</fullName>
+                    <default>false</default>
+                    <label>Office of Asst. Secy. for Admin. &amp; Mgt.</label>
+                </value>
+                <value>
+                    <fullName>Office of the Deputy Secretary</fullName>
+                    <default>false</default>
+                    <label>Office of the Deputy Secretary</label>
+                </value>
+                <value>
+                    <fullName>Office of the Inspector General</fullName>
+                    <default>false</default>
+                    <label>Office of the Inspector General</label>
+                </value>
+                <value>
+                    <fullName>Solicitor of Labor</fullName>
+                    <default>false</default>
+                    <label>Solicitor of Labor</label>
+                </value>
+                <value>
+                    <fullName>Wage and Hour Division</fullName>
+                    <default>false</default>
+                    <label>Wage and Hour Division</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Contact__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Contact</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Time Allocations</relationshipLabel>
+        <relationshipName>Time_Allocations</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Date</label>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Is_a_working_day__c</fullName>
+        <defaultValue>true</defaultValue>
+        <externalId>false</externalId>
+        <label>Is a working day ?</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Matter__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Matter</label>
+        <referenceTo>Case</referenceTo>
+        <relationshipLabel>Time Allocations</relationshipLabel>
+        <relationshipName>Time_Allocations</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Project__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Project</label>
+        <referenceTo>Timesheet_project__c</referenceTo>
+        <relationshipLabel>Time Allocations</relationshipLabel>
+        <relationshipName>Time_Allocations</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Quantity__c</fullName>
+        <externalId>false</externalId>
+        <label>Quantity</label>
+        <precision>2</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Statute__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Statute</label>
+        <referenceTo>Statute__c</referenceTo>
+        <relationshipLabel>Time Allocations</relationshipLabel>
+        <relationshipName>Time_Allocations</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Tasks__c</fullName>
+        <externalId>false</externalId>
+        <label>Tasks</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Legal Services</fullName>
+                    <default>false</default>
+                    <label>Legal Services</label>
+                </value>
+                <value>
+                    <fullName>Non-Legal Services</fullName>
+                    <default>false</default>
+                    <label>Non-Legal Services</label>
+                </value>
+                <value>
+                    <fullName>Training Program Related – Giving</fullName>
+                    <default>false</default>
+                    <label>Training Program Related – Giving</label>
+                </value>
+                <value>
+                    <fullName>Training Program Related – Participating</fullName>
+                    <default>false</default>
+                    <label>Training Program Related – Participating</label>
+                </value>
+                <value>
+                    <fullName>General Administration</fullName>
+                    <default>false</default>
+                    <label>General Administration</label>
+                </value>
+                <value>
+                    <fullName>Professional Development</fullName>
+                    <default>false</default>
+                    <label>Professional Development</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <label>Time Allocation</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Project__c</columns>
+        <columns>Matter__c</columns>
+        <columns>Statute__c</columns>
+        <columns>Tasks__c</columns>
+        <columns>Date__c</columns>
+        <columns>CREATEDBY_USER</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <displayFormat>A-{0000000}</displayFormat>
+        <label>ID</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Time Allocations</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>Contact__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Date__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Quantity__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Project__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Is_a_working_day__c</customTabListAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <visibility>Public</visibility>
+</CustomObject>
